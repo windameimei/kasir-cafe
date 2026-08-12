@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Kasir | KopiKita</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-icon">
+                <i class="fas fa-mug-hot"></i>
+            </div>
+            <span class="brand-name">KopiKita</span>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="kasir">
+                <i class="fas fa-cash-register"></i>
+                <span>Kasir</span>
+            </a>
+            <a href="#" class="nav-item" data-page="menu">
+                <i class="fas fa-utensils"></i>
+                <span>Menu</span>
+            </a>
+            <a href="#" class="nav-item" data-page="riwayat">
+                <i class="fas fa-receipt"></i>
+                <span>Riwayat</span>
+            </a>
+            <a href="#" class="nav-item" data-page="laporan">
+                <i class="fas fa-chart-bar"></i>
+                <span>Laporan</span>
+            </a>
+            <a href="#" class="nav-item" data-page="pengaturan">
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name">Admin</span>
+                    <span class="user-role">Kasir</span>
+                </div>
+            </div>
+            <button class="btn-logout" id="btnLogout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Keluar</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="top-bar-title">
+                <h1 id="pageTitle">Kasir</h1>
+                <span class="date-display" id="dateDisplay"></span>
+            </div>
+            <div class="top-bar-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari menu..." id="searchMenu">
+                </div>
+                <button class="btn-icon" id="btnNotif">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Page: Kasir -->
+        <div class="page active" id="page-kasir">
+            <div class="kasir-layout">
+                <!-- Menu Section -->
+                <div class="menu-section">
+                    <!-- Category Tabs -->
+                    <div class="category-tabs" id="categoryTabs">
+                        <button class="tab active" data-category="all">Semua</button>
+                        <button class="tab" data-category="coffee">Kopi</button>
+                        <button class="tab" data-category="noncoffee">Non Kopi</button>
+                        <button class="tab" data-category="food">Makanan</button>
+                        <button class="tab" data-category="snack">Snack</button>
+                    </div>
+
+                    <!-- Menu Grid -->
+                    <div class="menu-grid" id="menuGrid">
+                        <!-- Items will be rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Cart Section -->
+                <div class="cart-section">
+                    <div class="cart-header">
+                        <h3><i class="fas fa-shopping-cart"></i> Pesanan</h3>
+                        <span class="cart-count" id="cartCount">0 item</span>
+                    </div>
+
+                    <div class="cart-items" id="cartItems">
+                        <div class="cart-empty">
+                            <i class="fas fa-shopping-basket"></i>
+                            <p>Keranjang masih kosong</p>
+                            <span>Tambahkan item dari menu</span>
+                        </div>
+                    </div>
+
+                    <div class="cart-summary">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">Rp 0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Pajak (10%)</span>
+                            <span id="tax">Rp 0</span>
+                        </div>
+                        <div class="summary-row discount-row" id="discountRow" style="display:none;">
+                            <span>Diskon</span>
+                            <span id="discount">-Rp 0</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <div class="cart-actions">
+                        <button class="btn-secondary" id="btnClearCart">
+                            <i class="fas fa-trash"></i> Batal
+                        </button>
+                        <button class="btn-primary" id="btnCheckout">
+                            <i class="fas fa-credit-card"></i> Bayar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page: Menu -->
+        <div class="page" id="page-menu">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Daftar Menu</h2>
+                    <button class="btn-primary" id="btnAddMenu">
+                        <i class="fas fa-plus"></i> Tambah Menu
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Gambar</th>
+                                <th>Nama</th>
+                                <th>Kategori</th>
+                                <th>Harga</th>
+                                <th>Stok</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="menuTableBody">
+                            <!-- Rendered by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page: Riwayat -->
+        <div class="page" id="page-riwayat">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Riwayat Transaksi</h2>
+                    <div class="filter-group">
+                        <input type="date" id="filterDate" class="input-date">
+                        <button class="btn-secondary" id="btnFilter">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No. Invoice</th>
+                                <th>Waktu</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Metode</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- Rendered by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page: Laporan -->
+        <div class="page" id="page-laporan">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(107, 79, 58, 0.1); color: var(--primary);">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Pendapatan Hari Ini</span>
+                        <span class="stat-value" id="statIncome">Rp 0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(39, 174, 96, 0.1); color: var(--success);">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Transaksi</span>
+                        <span class="stat-value" id="statTransactions">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(52, 152, 219, 0.1); color: #3498DB;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Rata-rata per Transaksi</span>
+                        <span class="stat-value" id="statAvg">Rp 0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: rgba(231, 76, 60, 0.1); color: var(--error);">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Menu Terlaris</span>
+                        <span class="stat-value" id="statBestSeller">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Grafik Penjualan</h2>
+                    <select class="select-period" id="chartPeriod">
+                        <option value="7">7 Hari Terakhir</option>
+                        <option value="30">30 Hari Terakhir</option>
+                    </select>
+                </div>
+                <div class="chart-placeholder">
+                    <div class="chart-bars" id="chartBars">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page: Pengaturan -->
+        <div class="page" id="page-pengaturan">
+            <div class="content-card">
+                <div class="card-header">
+                    <h2>Pengaturan Toko</h2>
+                </div>
+                <form class="settings-form" id="settingsForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nama Toko</label>
+                            <input type="text" value="KopiKita Cafe" id="settingStoreName">
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat</label>
+                            <input type="text" value="Jl. Kopi No. 123, Jakarta" id="settingAddress">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>No. Telepon</label>
+                            <input type="text" value="0812-3456-7890" id="settingPhone">
+                        </div>
+                        <div class="form-group">
+                            <label>Pajak (%)</label>
+                            <input type="number" value="10" min="0" max="100" id="settingTax">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Struk Footer</label>
+                        <textarea rows="3" id="settingFooter">Terima kasih telah berkunjung!\nNikmati setiap tegukan kopi Anda.</textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary">Batal</button>
+                        <button type="submit" class="btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Checkout -->
+    <div class="modal" id="modalCheckout">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pembayaran</h3>
+                <button class="modal-close" id="closeCheckout">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-summary">
+                    <div class="payment-total">
+                        <span>Total Pembayaran</span>
+                        <span id="paymentTotal">Rp 0</span>
+                    </div>
+                </div>
+
+                <div class="payment-methods">
+                    <label class="method-option">
+                        <input type="radio" name="paymentMethod" value="cash" checked>
+                        <div class="method-card">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Tunai</span>
+                        </div>
+                    </label>
+                    <label class="method-option">
+                        <input type="radio" name="paymentMethod" value="qris">
+                        <div class="method-card">
+                            <i class="fas fa-qrcode"></i>
+                            <span>QRIS</span>
+                        </div>
+                    </label>
+                    <label class="method-option">
+                        <input type="radio" name="paymentMethod" value="transfer">
+                        <div class="method-card">
+                            <i class="fas fa-university"></i>
+                            <span>Transfer</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="payment-cash" id="paymentCash">
+                    <div class="form-group">
+                        <label>Uang Diterima</label>
+                        <input type="number" id="cashReceived" placeholder="0" min="0">
+                    </div>
+                    <div class="change-display">
+                        <span>Kembalian</span>
+                        <span id="changeAmount">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="btnCancelPayment">Batal</button>
+                <button class="btn-primary" id="btnConfirmPayment">
+                    <i class="fas fa-check"></i> Konfirmasi Bayar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Receipt -->
+    <div class="modal" id="modalReceipt">
+        <div class="modal-content receipt-modal">
+            <div class="receipt-paper" id="receiptPaper">
+                <div class="receipt-header">
+                    <h2 id="receiptStoreName">KopiKita Cafe</h2>
+                    <p id="receiptAddress">Jl. Kopi No. 123, Jakarta</p>
+                    <p id="receiptPhone">0812-3456-7890</p>
+                </div>
+                <div class="receipt-divider">
+                    <span>==================</span>
+                </div>
+                <div class="receipt-info">
+                    <p>No: <span id="receiptNo">INV-001</span></p>
+                    <p>Tgl: <span id="receiptDate">-</span></p>
+                    <p>Kasir: <span id="receiptCashier">Admin</span></p>
+                </div>
+                <div class="receipt-divider">
+                    <span>------------------</span>
+                </div>
+                <div class="receipt-items" id="receiptItems">
+                    <!-- Rendered by JS -->
+                </div>
+                <div class="receipt-divider">
+                    <span>------------------</span>
+                </div>
+                <div class="receipt-totals">
+                    <div class="receipt-row">
+                        <span>Subtotal</span>
+                        <span id="receiptSubtotal">Rp 0</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>PPN (10%)</span>
+                        <span id="receiptTax">Rp 0</span>
+                    </div>
+                    <div class="receipt-row total">
+                        <span>TOTAL</span>
+                        <span id="receiptTotal">Rp 0</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Tunai</span>
+                        <span id="receiptPaid">Rp 0</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Kembali</span>
+                        <span id="receiptChange">Rp 0</span>
+                    </div>
+                </div>
+                <div class="receipt-divider">
+                    <span>==================</span>
+                </div>
+                <div class="receipt-footer">
+                    <p>Terima kasih telah berkunjung!</p>
+                    <p>Nikmati setiap tegukan kopi Anda.</p>
+                </div>
+            </div>
+            <div class="receipt-actions">
+                <button class="btn-secondary" id="btnCloseReceipt">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+                <button class="btn-primary" id="btnPrintReceipt">
+                    <i class="fas fa-print"></i> Cetak Struk
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Pesan</span>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
